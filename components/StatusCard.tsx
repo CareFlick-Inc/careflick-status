@@ -49,8 +49,8 @@ const StatusCard: React.FC<StatusCardProps> = ({ service }) => {
 
   const formatServiceName = (name: string) => {
     const nameMap: Record<string, string> = {
-      mongodb: "MongoDB",
-      redis: "Redis",
+      mongodb: "Database",
+      redis: "Cache",
       orchestration: "Orchestration",
       services: "Services",
       crons: "Cron Jobs",

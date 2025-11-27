@@ -41,7 +41,7 @@ export async function GET() {
     return NextResponse.json({
       status: "healthy",
       latency,
-      message: "Redis is responsive",
+      message: "Cache is responsive",
     });
   } catch (error) {
     const latency = Date.now() - startTime;

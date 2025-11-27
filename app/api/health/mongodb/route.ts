@@ -42,7 +42,7 @@ export async function GET() {
     return NextResponse.json({
       status: "healthy",
       latency,
-      message: "MongoDB is responsive",
+      message: "Database is responsive",
     });
   } catch (error) {
     const latency = Date.now() - startTime;
@@ -50,7 +50,7 @@ export async function GET() {
       {
         status: "down",
         latency,
-        message: error instanceof Error ? error.message : "MongoDB connection failed",
+        message: error instanceof Error ? error.message : "Database connection failed",
       },
       { status: 503 }
     );
