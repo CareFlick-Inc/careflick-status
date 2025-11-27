@@ -83,7 +83,8 @@ export async function GET() {
       orchestration,
       services,
       crons,
-      frontend,
+      careflick,
+      hub,
       redis,
       llm,
     ] = await Promise.all([
@@ -91,10 +92,22 @@ export async function GET() {
       checkService("orchestration", `${baseUrl}/api/health/orchestration`),
       checkService("services", `${baseUrl}/api/health/services`),
       checkService("crons", `${baseUrl}/api/health/crons`),
-      checkService("frontend", `${baseUrl}/api/health/frontend`),
+      checkService("careflick", `${baseUrl}/api/health/frontend/careflick`),
+      checkService("hub", `${baseUrl}/api/health/frontend/hub`),
       checkService("redis", `${baseUrl}/api/health/redis`),
       checkLLMServices(`${baseUrl}/api/health/llm`),
     ]);
+
+    const allServices = [
+      mongodb,
+      orchestration,
+      services,
+      crons,
+      careflick,
+      hub,
+      redis,
+      llm,
+    ];
 
     return NextResponse.json({
       services: {
@@ -102,18 +115,15 @@ export async function GET() {
         orchestration,
         services,
         crons,
-        frontend,
+        careflick,
+        hub,
         redis,
         llm,
       },
       lastUpdate: new Date(),
-      overallStatus: [mongodb, orchestration, services, crons, frontend, redis, llm].every(
-        (s) => s.status === "healthy"
-      )
+      overallStatus: allServices.every((s) => s.status === "healthy")
         ? "healthy"
-        : [mongodb, orchestration, services, crons, frontend, redis, llm].some(
-            (s) => s.status === "down"
-          )
+        : allServices.some((s) => s.status === "down")
         ? "down"
         : "degraded",
     });

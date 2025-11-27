@@ -43,7 +43,7 @@ export default function Home() {
   const allServiceArray: ServiceStatus[] = Object.values(services ?? {});
   const infrastructure = allServiceArray.filter((s) => ['mongodb', 'redis'].includes(s.name));
   const backend = allServiceArray.filter((s) => ['orchestration', 'services', 'crons'].includes(s.name));
-  const frontend = allServiceArray.filter((s) => s.name === 'frontend');
+  const frontend = allServiceArray.filter((s) => ['frontend', 'careflick', 'hub'].includes(s.name));
   const llmService = allServiceArray.find((s) => s.name === 'llm');
 
   if (loading) {

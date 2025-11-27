@@ -29,6 +29,8 @@ export type ServiceName =
   | "services"
   | "crons"
   | "frontend"
+  | "careflick"
+  | "hub"
   | "redis"
   | "gemini"
   | "openai"
