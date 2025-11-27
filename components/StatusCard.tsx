@@ -68,10 +68,11 @@ const StatusCard: React.FC<StatusCardProps> = ({ service }) => {
       style={{
         borderRadius: "12px",
         padding: "20px",
+        paddingLeft: "16px",
         borderLeft: `4px solid ${getStatusColor()}`,
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "16px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <div
             style={{
@@ -88,29 +89,27 @@ const StatusCard: React.FC<StatusCardProps> = ({ service }) => {
               {getServiceIcon(service.name)}
             </span>
           </div>
-          <div>
-            <h3 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "4px" }}>
-              {formatServiceName(service.name)}
-            </h3>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <span
-                className="material-icons"
-                style={{
-                  fontSize: "16px",
-                  color: getStatusColor(),
-                }}
-              >
-                {getStatusIcon()}
-              </span>
-              <span style={{ fontSize: "14px", color: getStatusColor(), textTransform: "capitalize" }}>
-                {service.status}
-              </span>
-            </div>
-          </div>
+          <h3 style={{ fontSize: "18px", fontWeight: "600", margin: 0 }}>
+            {formatServiceName(service.name)}
+          </h3>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span
+            className="material-icons"
+            style={{
+              fontSize: "16px",
+              color: getStatusColor(),
+            }}
+          >
+            {getStatusIcon()}
+          </span>
+          <span style={{ fontSize: "14px", color: getStatusColor(), textTransform: "capitalize" }}>
+            {service.status}
+          </span>
         </div>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px", paddingLeft: "4px" }}>
         {service.latency !== null && (
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
             <span style={{ color: "var(--text-secondary)" }}>Latency:</span>

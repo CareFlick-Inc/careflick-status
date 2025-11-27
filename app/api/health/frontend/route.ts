@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const startTime = Date.now();
+  let startTime = Date.now();
   const url = "https://careflick.ai";
 
   try {

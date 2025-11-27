@@ -2,10 +2,9 @@ import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
 export async function GET() {
-  const startTime = Date.now();
-
+  let startTime = Date.now();
   try {
-    const mongoUri = process.env.MONGODB_URI;
+    const mongoUri = process.env.MONGODB_URL;
 
     if (!mongoUri) {
       return NextResponse.json(
@@ -21,7 +20,8 @@ export async function GET() {
     const client = new MongoClient(mongoUri, {
       serverSelectionTimeoutMS: 5000,
     });
-
+    
+    startTime = Date.now();
     await client.connect();
     await client.db("admin").command({ ping: 1 });
     await client.close();

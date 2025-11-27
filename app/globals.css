@@ -77,14 +77,17 @@ html {
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 1;
+    filter: drop-shadow(0 0 4px #10b981);
   }
   50% {
     opacity: 0.5;
+    filter: drop-shadow(0 0 8px #10b981);
   }
 }
 
 .pulse-glow {
   animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  color: #10b981;
 }
 
 /* Fade in animation */

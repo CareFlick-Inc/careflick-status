@@ -9,7 +9,7 @@ interface LLMHealthResult {
 }
 
 async function checkGemini() {
-  const startTime = Date.now();
+  let startTime = Date.now();
   try {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -22,9 +22,10 @@ async function checkGemini() {
 
     const genAI = new GoogleGenAI({ apiKey });
 
+    startTime = Date.now();
     // Simple test prompt using the new API
-    const response = await genAI.models.generateContent({
-      model: "gemini-2.0-flash-exp",
+    await genAI.models.generateContent({
+      model: "gemini-2.5-flash",
       contents: "Hello",
     });
 
@@ -45,7 +46,7 @@ async function checkGemini() {
 }
 
 async function checkOpenAI() {
-  const startTime = Date.now();
+  let startTime = Date.now();
   try {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
@@ -58,6 +59,7 @@ async function checkOpenAI() {
 
     const openai = new OpenAI({ apiKey });
 
+    startTime = Date.now();
     // List models as a lightweight check
     await openai.models.list();
 
@@ -78,7 +80,7 @@ async function checkOpenAI() {
 }
 
 async function checkAzureOpenAI() {
-  const startTime = Date.now();
+  let startTime = Date.now();
   try {
     const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
     const apiKey = process.env.AZURE_OPENAI_API_KEY;
@@ -98,6 +100,8 @@ async function checkAzureOpenAI() {
       defaultQuery: { 'api-version': process.env.AZURE_OPENAI_API_VERSION || '2023-05-15' },
       defaultHeaders: { 'api-key': apiKey },
     });
+
+    startTime = Date.now();
 
     // Simple ping by listing models
     const response = await fetch(`${endpoint}/openai/models?api-version=${process.env.AZURE_OPENAI_API_VERSION || '2023-05-15'}`, {
@@ -140,18 +144,24 @@ export async function GET() {
       checkAzureOpenAI(),
     ]);
 
-    const result: LLMHealthResult = {
-      gemini,
-      openai,
-      azureOpenai,
+    // Determine overall status - all must be healthy
+    const allHealthy = [gemini, openai, azureOpenai].every((r) => r.status === "healthy");
+    
+    // Combine into single result with Gemini latency
+    const combinedResult = {
+      status: allHealthy ? "healthy" : "down",
+      latency: gemini.latency,
+      message: allHealthy 
+        ? "All LLM services are healthy" 
+        : `Some LLM services are down: ${[
+            gemini.status !== "healthy" ? "Gemini" : null,
+            openai.status !== "healthy" ? "OpenAI" : null,
+            azureOpenai.status !== "healthy" ? "Azure OpenAI" : null,
+          ].filter(Boolean).join(", ")}`,
     };
 
-    // Determine overall status
-    const allHealthy = Object.values(result).every((r) => r.status === "healthy");
-    const anyHealthy = Object.values(result).some((r) => r.status === "healthy");
-
-    return NextResponse.json(result, {
-      status: allHealthy ? 200 : anyHealthy ? 207 : 503,
+    return NextResponse.json(combinedResult, {
+      status: allHealthy ? 200 : 503,
     });
   } catch (error) {
     return NextResponse.json(

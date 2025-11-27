@@ -42,11 +42,7 @@ async function checkService(
 
 async function checkLLMServices(
   endpoint: string
-): Promise<{
-  gemini: ServiceStatus;
-  openai: ServiceStatus;
-  azureOpenai: ServiceStatus;
-}> {
+): Promise<ServiceStatus> {
   try {
     const response = await fetch(endpoint, {
       cache: "no-store",
@@ -55,59 +51,31 @@ async function checkLLMServices(
 
     const data = await response.json();
 
-    const geminiStatus: ServiceStatus = {
-      name: "gemini",
-      status: data.gemini.status,
-      latency: data.gemini.latency,
+    const llmStatus: ServiceStatus = {
+      name: "llm",
+      status: data.status,
+      latency: data.latency,
       lastChecked: new Date(),
-      message: data.gemini.message,
+      message: data.message,
     };
 
-    const openaiStatus: ServiceStatus = {
-      name: "openai",
-      status: data.openai.status,
-      latency: data.openai.latency,
-      lastChecked: new Date(),
-      message: data.openai.message,
-    };
+    storage.updateServiceStatus("llm", llmStatus);
 
-    const azureOpenaiStatus: ServiceStatus = {
-      name: "azure-openai",
-      status: data.azureOpenai.status,
-      latency: data.azureOpenai.latency,
-      lastChecked: new Date(),
-      message: data.azureOpenai.message,
-    };
-
-    storage.updateServiceStatus("gemini", geminiStatus);
-    storage.updateServiceStatus("openai", openaiStatus);
-    storage.updateServiceStatus("azure-openai", azureOpenaiStatus);
-
-    return {
-      gemini: geminiStatus,
-      openai: openaiStatus,
-      azureOpenai: azureOpenaiStatus,
-    };
+    return llmStatus;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "LLM check failed";
 
-    const defaultStatus = (name: ServiceName): ServiceStatus => ({
-      name,
+    const llmStatus: ServiceStatus = {
+      name: "llm",
       status: "down",
       latency: null,
       lastChecked: new Date(),
       message: errorMessage,
-    });
+    };
 
-    const gemini = defaultStatus("gemini");
-    const openai = defaultStatus("openai");
-    const azureOpenai = defaultStatus("azure-openai");
+    storage.updateServiceStatus("llm", llmStatus);
 
-    storage.updateServiceStatus("gemini", gemini);
-    storage.updateServiceStatus("openai", openai);
-    storage.updateServiceStatus("azure-openai", azureOpenai);
-
-    return { gemini, openai, azureOpenai: azureOpenai };
+    return llmStatus;
   }
 }
 
@@ -124,7 +92,7 @@ export async function GET() {
       crons,
       frontend,
       redis,
-      llmServices,
+      llm,
     ] = await Promise.all([
       checkService("mongodb", `${baseUrl}/api/health/mongodb`),
       checkService("orchestration", `${baseUrl}/api/health/orchestration`),
@@ -142,9 +110,7 @@ export async function GET() {
       crons,
       frontend,
       redis,
-      gemini: llmServices.gemini,
-      openai: llmServices.openai,
-      "azure-openai": llmServices.azureOpenai,
+      llm,
     };
 
     // Calculate overall status

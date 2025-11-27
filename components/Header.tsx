@@ -63,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({ lastUpdate, overallStatus }) => {
           </div>
           {lastUpdate && (
             <div style={{ fontSize: "14px", color: "var(--text-secondary)", marginTop: "4px" }}>
-              Last updated: {new Date(lastUpdate).toLocaleTimeString()}
+              Last updated: {new Date(lastUpdate).toLocaleTimeString()} {Intl.DateTimeFormat().resolvedOptions().timeZone}
             </div>
           )}
         </div>

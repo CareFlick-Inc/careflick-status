@@ -30,9 +30,7 @@ export type ServiceName =
   | "crons"
   | "frontend"
   | "redis"
-  | "gemini"
-  | "openai"
-  | "azure-openai";
+  | "llm";
 
 export interface AllServicesStatus {
   services: Record<ServiceName, ServiceStatus>;
