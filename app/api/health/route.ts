@@ -22,17 +22,17 @@ async function checkService(
       message: data.message,
     };
 
-    // Update storage
     storage.updateServiceStatus(serviceName, status);
 
     return status;
   } catch (error) {
+    console.error(`[HealthCheck] ${serviceName} error:`, error);
     const status: ServiceStatus = {
       name: serviceName,
       status: "down",
       latency: null,
       lastChecked: new Date(),
-      message: error instanceof Error ? error.message : "Service check failed",
+      message: "Service check failed. Please contact support.",
     };
 
     storage.updateServiceStatus(serviceName, status);
@@ -40,9 +40,7 @@ async function checkService(
   }
 }
 
-async function checkLLMServices(
-  endpoint: string
-): Promise<ServiceStatus> {
+async function checkLLMServices(endpoint: string): Promise<ServiceStatus> {
   try {
     const response = await fetch(endpoint, {
       cache: "no-store",
@@ -60,31 +58,26 @@ async function checkLLMServices(
     };
 
     storage.updateServiceStatus("llm", llmStatus);
-
     return llmStatus;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "LLM check failed";
-
+    console.error("[HealthCheck] LLM error:", error);
     const llmStatus: ServiceStatus = {
       name: "llm",
       status: "down",
       latency: null,
       lastChecked: new Date(),
-      message: errorMessage,
+      message: "LLM check failed. Please contact support.",
     };
 
     storage.updateServiceStatus("llm", llmStatus);
-
     return llmStatus;
   }
 }
 
 export async function GET() {
   try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-    // Check all services in parallel
     const [
       mongodb,
       orchestration,
@@ -103,38 +96,33 @@ export async function GET() {
       checkLLMServices(`${baseUrl}/api/health/llm`),
     ]);
 
-    const allServices = {
-      mongodb,
-      orchestration,
-      services,
-      crons,
-      frontend,
-      redis,
-      llm,
-    };
-
-    // Calculate overall status
-    const serviceArray = Object.values(allServices);
-    const allHealthy = serviceArray.every((s) => s.status === "healthy");
-    const anyDown = serviceArray.some((s) => s.status === "down");
-
-    const overallStatus = allHealthy
-      ? "healthy"
-      : anyDown
-        ? "down"
-        : "degraded";
-
     return NextResponse.json({
-      services: allServices,
+      services: {
+        mongodb,
+        orchestration,
+        services,
+        crons,
+        frontend,
+        redis,
+        llm,
+      },
       lastUpdate: new Date(),
-      overallStatus,
+      overallStatus: [mongodb, orchestration, services, crons, frontend, redis, llm].every(
+        (s) => s.status === "healthy"
+      )
+        ? "healthy"
+        : [mongodb, orchestration, services, crons, frontend, redis, llm].some(
+            (s) => s.status === "down"
+          )
+        ? "down"
+        : "degraded",
     });
   } catch (error) {
+    console.error("[HealthCheck] GET error:", error);
     return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : "Health check failed",
-      },
+      { error: "Failed to fetch health status. Please contact support." },
       { status: 500 }
     );
   }
 }
+

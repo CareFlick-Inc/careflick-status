@@ -1,6 +1,22 @@
 import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
+let cachedClient: MongoClient | null = null;
+let cachedPromise: Promise<MongoClient> | null = null;
+
+async function getMongoClient(mongoUri: string): Promise<MongoClient> {
+  if (cachedClient) return cachedClient;
+  if (!cachedPromise) {
+    cachedPromise = (async () => {
+      const client = new MongoClient(mongoUri, { serverSelectionTimeoutMS: 5000 });
+      await client.connect();
+      cachedClient = client;
+      return client;
+    })();
+  }
+  return cachedPromise;
+}
+
 export async function GET() {
   let startTime = Date.now();
   try {
@@ -17,14 +33,9 @@ export async function GET() {
       );
     }
 
-    const client = new MongoClient(mongoUri, {
-      serverSelectionTimeoutMS: 5000,
-    });
-    
+    const client = await getMongoClient(mongoUri);
     startTime = Date.now();
-    await client.connect();
     await client.db("admin").command({ ping: 1 });
-    await client.close();
 
     const latency = Date.now() - startTime;
 
