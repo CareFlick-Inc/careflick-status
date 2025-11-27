@@ -33,8 +33,8 @@ export async function GET() {
       );
     }
 
-    const client = await getMongoClient(mongoUri);
     startTime = Date.now();
+    const client = await getMongoClient(mongoUri);
     await client.db("admin").command({ ping: 1 });
 
     const latency = Date.now() - startTime;
