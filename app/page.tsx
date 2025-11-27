@@ -6,7 +6,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import StatusCard from '@/components/StatusCard';
 import { ServiceStatus, ServiceName } from '@/lib/types';
 
-const POLL_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const POLL_INTERVAL = 60 * 60 * 1000; // 1 hour
 
 export default function Home() {
   const [services, setServices] = useState<Record<ServiceName, ServiceStatus> | null>(null);
