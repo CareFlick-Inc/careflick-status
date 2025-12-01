@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   const startTime = Date.now();
-  const url = "https://careflick-cronjobs-service-d9c3hhhmf6fydse0.eastus-01.azurewebsites.net/health";
+  const url = "https://cronsocket-eggfc4h5cxaac8g8.z03.azurefd.net/health";
 
   try {
     const response = await fetch(url, {
