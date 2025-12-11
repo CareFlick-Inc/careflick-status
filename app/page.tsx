@@ -42,7 +42,7 @@ export default function Home() {
   // Compute grouped service arrays for rendering
   const allServiceArray: ServiceStatus[] = Object.values(services ?? {});
   const infrastructure = allServiceArray.filter((s) => ['mongodb', 'redis'].includes(s.name));
-  const backend = allServiceArray.filter((s) => ['orchestration', 'services', 'crons'].includes(s.name));
+  const backend = allServiceArray.filter((s) => ['orchestration', 'services', 'crons', 'ai-engine'].includes(s.name));
   const frontend = allServiceArray.filter((s) => ['frontend', 'careflick', 'hub', 'nova-app'].includes(s.name));
   const llmService = allServiceArray.find((s) => s.name === 'llm');
   const novaServices = allServiceArray.filter((s) => ['nova-backend', 'nova-crons', 'nova-copilot', 'nova-ai-workflows', 'nova-drugbank'].includes(s.name));

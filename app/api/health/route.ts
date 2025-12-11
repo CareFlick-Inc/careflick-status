@@ -93,6 +93,7 @@ export async function GET() {
       novaCopilot,
       novaAiWorkflows,
       novaDrugbank,
+      aiEngine,
     ] = await Promise.all([
       checkService("mongodb", `${baseUrl}/api/health/mongodb`),
       checkService("orchestration", `${baseUrl}/api/health/orchestration`),
@@ -108,6 +109,7 @@ export async function GET() {
       checkService("nova-copilot", `${baseUrl}/api/health/backend/nova-copilot`),
       checkService("nova-ai-workflows", `${baseUrl}/api/health/backend/nova-ai-workflows`),
       checkService("nova-drugbank", `${baseUrl}/api/health/backend/nova-drugbank`),
+      checkService("ai-engine", `${baseUrl}/api/health/backend/ai-engine`),
     ]);
 
     const allServices = [
@@ -125,6 +127,7 @@ export async function GET() {
       novaCopilot,
       novaAiWorkflows,
       novaDrugbank,
+      aiEngine,
     ];
 
     return NextResponse.json({
@@ -143,6 +146,7 @@ export async function GET() {
         "nova-copilot": novaCopilot,
         "nova-ai-workflows": novaAiWorkflows,
         "nova-drugbank": novaDrugbank,
+        "ai-engine": aiEngine,
       },
       lastUpdate: new Date(),
       overallStatus: allServices.every((s) => s.status === "healthy")

@@ -51,6 +51,7 @@ const StatusCard: React.FC<StatusCardProps> = ({ service }) => {
       "nova-copilot": "smart_toy",
       "nova-ai-workflows": "account_tree",
       "nova-drugbank": "medication",
+      "ai-engine": "psychology",
     };
     return iconMap[name] || "settings";
   };
@@ -74,6 +75,7 @@ const StatusCard: React.FC<StatusCardProps> = ({ service }) => {
       "nova-copilot": "Copilot",
       "nova-ai-workflows": "AI Workflows",
       "nova-drugbank": "Drugbank",
+      "ai-engine": "AI Engine",
     };
     return nameMap[name] || name;
   };

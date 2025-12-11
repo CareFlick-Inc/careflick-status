@@ -41,7 +41,8 @@ export type ServiceName =
   | "nova-crons"
   | "nova-copilot"
   | "nova-ai-workflows"
-  | "nova-drugbank";
+  | "nova-drugbank"
+  | "ai-engine";
 
 export interface AllServicesStatus {
   services: Record<ServiceName, ServiceStatus>;

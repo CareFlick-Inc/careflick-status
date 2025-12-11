@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   let startTime = Date.now();
-  const url = "https://careflick-nova-cron-service-fwcngchja2g8d3gg.eastus-01.azurewebsites.net/health";
+  const url = "https://aiengine.careflick.ai";
 
   try {
     const response = await fetch(url, {
@@ -16,14 +16,14 @@ export async function GET() {
       return NextResponse.json({
         status: "healthy",
         latency,
-        message: "Nova Crons is accessible",
+        message: "AI Engine is accessible",
       });
     } else {
       return NextResponse.json(
         {
           status: "degraded",
           latency,
-          message: `Nova Crons returned status ${response.status}`,
+          message: `AI Engine returned status ${response.status}`,
         },
         { status: 503 }
       );
@@ -34,7 +34,7 @@ export async function GET() {
       {
         status: "down",
         latency,
-        message: error instanceof Error ? error.message : "Nova Crons unreachable",
+        message: error instanceof Error ? error.message : "AI Engine unreachable",
       },
       { status: 503 }
     );
