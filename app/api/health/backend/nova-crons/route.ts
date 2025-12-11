@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   let startTime = Date.now();
-  const url = "https://careflick-nova-cron-service-fwcngchja2g8d3gg.eastus-01.azurewebsites.net/health";
+  const url = "https://novacronsocket-djapfqhabdexc9er.z03.azurefd.net/health";
 
   try {
     const response = await fetch(url, {
