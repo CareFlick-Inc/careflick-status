@@ -35,7 +35,13 @@ export type ServiceName =
   | "gemini"
   | "openai"
   | "azure-openai"
-  | "llm";
+  | "llm"
+  | "nova-app"
+  | "nova-backend"
+  | "nova-crons"
+  | "nova-copilot"
+  | "nova-ai-workflows"
+  | "nova-drugbank";
 
 export interface AllServicesStatus {
   services: Record<ServiceName, ServiceStatus>;

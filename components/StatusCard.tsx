@@ -45,6 +45,12 @@ const StatusCard: React.FC<StatusCardProps> = ({ service }) => {
       gemini: "psychology",
       openai: "smart_toy",
       "azure-openai": "cloud_circle",
+      "nova-app": "rocket_launch",
+      "nova-backend": "api",
+      "nova-crons": "schedule",
+      "nova-copilot": "smart_toy",
+      "nova-ai-workflows": "account_tree",
+      "nova-drugbank": "medication",
     };
     return iconMap[name] || "settings";
   };
@@ -57,11 +63,17 @@ const StatusCard: React.FC<StatusCardProps> = ({ service }) => {
       services: "Services",
       crons: "Cron Jobs",
       frontend: "Frontend",
-      careflick: "Careflick",
-      hub: "Hub",
+      careflick: "Companion App",
+      hub: "Enterprise Hub",
       gemini: "Gemini AI",
       openai: "OpenAI",
       "azure-openai": "Azure OpenAI",
+      "nova-app": "Nova App",
+      "nova-backend": "Orchestration",
+      "nova-crons": "Cron Jobs",
+      "nova-copilot": "Copilot",
+      "nova-ai-workflows": "AI Workflows",
+      "nova-drugbank": "Drugbank",
     };
     return nameMap[name] || name;
   };

@@ -43,8 +43,9 @@ export default function Home() {
   const allServiceArray: ServiceStatus[] = Object.values(services ?? {});
   const infrastructure = allServiceArray.filter((s) => ['mongodb', 'redis'].includes(s.name));
   const backend = allServiceArray.filter((s) => ['orchestration', 'services', 'crons'].includes(s.name));
-  const frontend = allServiceArray.filter((s) => ['frontend', 'careflick', 'hub'].includes(s.name));
+  const frontend = allServiceArray.filter((s) => ['frontend', 'careflick', 'hub', 'nova-app'].includes(s.name));
   const llmService = allServiceArray.find((s) => s.name === 'llm');
+  const novaServices = allServiceArray.filter((s) => ['nova-backend', 'nova-crons', 'nova-copilot', 'nova-ai-workflows', 'nova-drugbank'].includes(s.name));
 
   if (loading) {
     return (
@@ -69,143 +70,175 @@ export default function Home() {
 
           {/* Services Grid */}
           <section style={{ marginBottom: '48px' }}>
-          {/* Infrastructure */}
-          <h2
-            style={{
-              fontSize: '20px',
-              fontWeight: '600',
-              marginBottom: '16px',
-              color: 'var(--text-primary)',
-            }}
-          >
-            <span
-              className='material-icons'
-              style={{ verticalAlign: 'middle', marginRight: '8px' }}
+            {/* Infrastructure */}
+            <h2
+              style={{
+                fontSize: '20px',
+                fontWeight: '600',
+                marginBottom: '16px',
+                color: 'var(--text-primary)',
+              }}
             >
-              dns
-            </span>
-            Infrastructure
-          </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: '20px',
-              marginBottom: '32px',
-            }}
-          >
-            {infrastructure.length === 0 && allServiceArray.length === 0 ? (
-              <div style={{ color: 'var(--text-secondary)', padding: '12px' }}>No services available</div>
-            ) : (
-              infrastructure.map((service) => (
+              <span
+                className='material-icons'
+                style={{ verticalAlign: 'middle', marginRight: '8px' }}
+              >
+                dns
+              </span>
+              Infrastructure
+            </h2>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                gap: '20px',
+                marginBottom: '32px',
+              }}
+            >
+              {infrastructure.length === 0 && allServiceArray.length === 0 ? (
+                <div style={{ color: 'var(--text-secondary)', padding: '12px' }}>No services available</div>
+              ) : (
+                infrastructure.map((service) => (
+                  <StatusCard
+                    key={service.name}
+                    service={service}
+                  />
+                ))
+              )}
+            </div>
+
+            {/* AI Companion Backend Services */}
+            <h2
+              style={{
+                fontSize: '20px',
+                fontWeight: '600',
+                marginBottom: '16px',
+                color: 'var(--text-primary)',
+              }}
+            >
+              <span
+                className='material-icons'
+                style={{ verticalAlign: 'middle', marginRight: '8px' }}
+              >
+                api
+              </span>
+              Companion Backend Services
+            </h2>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                gap: '20px',
+                marginBottom: '32px',
+              }}
+            >
+              {backend.map((service) => (
                 <StatusCard
                   key={service.name}
                   service={service}
                 />
-              ))
-            )}
-          </div>
-
-          {/* Backend Services */}
-          <h2
-            style={{
-              fontSize: '20px',
-              fontWeight: '600',
-              marginBottom: '16px',
-              color: 'var(--text-primary)',
-            }}
-          >
-            <span
-              className='material-icons'
-              style={{ verticalAlign: 'middle', marginRight: '8px' }}
+              ))}
+            </div>
+            {/* Nova Backend Services */}
+            <h2
+              style={{
+                fontSize: '20px',
+                fontWeight: '600',
+                marginBottom: '16px',
+                color: 'var(--text-primary)',
+              }}
             >
-              cloud
-            </span>
-            Backend Services
-          </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: '20px',
-              marginBottom: '32px',
-            }}
-          >
-            {backend.map((service) => (
-              <StatusCard
-                key={service.name}
-                service={service}
-              />
-            ))}
-          </div>
-
-          {/* Frontend */}
-          <h2
-            style={{
-              fontSize: '20px',
-              fontWeight: '600',
-              marginBottom: '16px',
-              color: 'var(--text-primary)',
-            }}
-          >
-            <span
-              className='material-icons'
-              style={{ verticalAlign: 'middle', marginRight: '8px' }}
+              <span
+                className='material-icons'
+                style={{ verticalAlign: 'middle', marginRight: '8px' }}
+              >
+                api
+              </span>
+              Nova Backend Services
+            </h2>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                gap: '20px',
+                marginBottom: '32px',
+              }}
             >
-              web
-            </span>
-            Frontend
-          </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: '20px',
-              marginBottom: '32px',
-            }}
-          >
-            {frontend.map((service) => (
-              <StatusCard
-                key={service.name}
-                service={service}
-              />
-            ))}
-          </div>
+              {novaServices.map((service) => (
+                <StatusCard
+                  key={service.name}
+                  service={service}
+                />
+              ))}
+            </div>
 
-          {/* LLM Services */}
-          <h2
-            style={{
-              fontSize: '20px',
-              fontWeight: '600',
-              marginBottom: '16px',
-              color: 'var(--text-primary)',
-            }}
-          >
-            <span
-              className='material-icons'
-              style={{ verticalAlign: 'middle', marginRight: '8px' }}
+            {/* Frontend */}
+            <h2
+              style={{
+                fontSize: '20px',
+                fontWeight: '600',
+                marginBottom: '16px',
+                color: 'var(--text-primary)',
+              }}
             >
-              psychology
-            </span>
-            LLM Services
-          </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: '20px',
-              marginBottom: '32px',
-            }}
-          >
-            {llmService ? (
-              <StatusCard
-                key='llm'
-                service={llmService}
-              />
-            ) : null}
-          </div>
-        </section>
-      </div>
+              <span
+                className='material-icons'
+                style={{ verticalAlign: 'middle', marginRight: '8px' }}
+              >
+                web
+              </span>
+              Frontend
+            </h2>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                gap: '20px',
+                marginBottom: '32px',
+              }}
+            >
+              {frontend.map((service) => (
+                <StatusCard
+                  key={service.name}
+                  service={service}
+                />
+              ))}
+            </div>
+
+            {/* LLM Services */}
+            <h2
+              style={{
+                fontSize: '20px',
+                fontWeight: '600',
+                marginBottom: '16px',
+                color: 'var(--text-primary)',
+              }}
+            >
+              <span
+                className='material-icons'
+                style={{ verticalAlign: 'middle', marginRight: '8px' }}
+              >
+                psychology
+              </span>
+              LLM Services
+            </h2>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                gap: '20px',
+                marginBottom: '32px',
+              }}
+            >
+              {llmService ? (
+                <StatusCard
+                  key='llm'
+                  service={llmService}
+                />
+              ) : null}
+            </div>
+          </section>
+        </div>
       </main>
     </ErrorBoundary>
   );

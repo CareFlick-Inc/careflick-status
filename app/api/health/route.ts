@@ -87,6 +87,12 @@ export async function GET() {
       hub,
       redis,
       llm,
+      novaApp,
+      novaBackend,
+      novaCrons,
+      novaCopilot,
+      novaAiWorkflows,
+      novaDrugbank,
     ] = await Promise.all([
       checkService("mongodb", `${baseUrl}/api/health/mongodb`),
       checkService("orchestration", `${baseUrl}/api/health/orchestration`),
@@ -96,6 +102,12 @@ export async function GET() {
       checkService("hub", `${baseUrl}/api/health/frontend/hub`),
       checkService("redis", `${baseUrl}/api/health/redis`),
       checkLLMServices(`${baseUrl}/api/health/llm`),
+      checkService("nova-app", `${baseUrl}/api/health/frontend/nova-app`),
+      checkService("nova-backend", `${baseUrl}/api/health/backend/nova-backend`),
+      checkService("nova-crons", `${baseUrl}/api/health/backend/nova-crons`),
+      checkService("nova-copilot", `${baseUrl}/api/health/backend/nova-copilot`),
+      checkService("nova-ai-workflows", `${baseUrl}/api/health/backend/nova-ai-workflows`),
+      checkService("nova-drugbank", `${baseUrl}/api/health/backend/nova-drugbank`),
     ]);
 
     const allServices = [
@@ -107,6 +119,12 @@ export async function GET() {
       hub,
       redis,
       llm,
+      novaApp,
+      novaBackend,
+      novaCrons,
+      novaCopilot,
+      novaAiWorkflows,
+      novaDrugbank,
     ];
 
     return NextResponse.json({
@@ -119,13 +137,19 @@ export async function GET() {
         hub,
         redis,
         llm,
+        "nova-app": novaApp,
+        "nova-backend": novaBackend,
+        "nova-crons": novaCrons,
+        "nova-copilot": novaCopilot,
+        "nova-ai-workflows": novaAiWorkflows,
+        "nova-drugbank": novaDrugbank,
       },
       lastUpdate: new Date(),
       overallStatus: allServices.every((s) => s.status === "healthy")
         ? "healthy"
         : allServices.some((s) => s.status === "down")
-        ? "down"
-        : "degraded",
+          ? "down"
+          : "degraded",
     });
   } catch (error) {
     console.error("[HealthCheck] GET error:", error);
