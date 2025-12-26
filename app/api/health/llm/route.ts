@@ -93,14 +93,6 @@ async function checkAzureOpenAI() {
       };
     }
 
-    // Use OpenAI client with Azure endpoint
-    const client = new OpenAI({
-      apiKey,
-      baseURL: `${endpoint}/openai/deployments`,
-      defaultQuery: { 'api-version': process.env.AZURE_OPENAI_API_VERSION || '2023-05-15' },
-      defaultHeaders: { 'api-key': apiKey },
-    });
-
     startTime = Date.now();
 
     // Simple ping by listing models
